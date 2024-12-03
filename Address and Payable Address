@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract Wallet {
+
+    address public owner;
+     
+    event Withdrawal(address indexed _to, uint256 _amount);
+
+
+    modifier onlyOwner(){
+        require(msg.sender==owner,"Wallet should allow only owner to withdraw:");
+        _;
+    }
+
+    constructor(){
+        owner = msg.sender;
+    }
+
+    function deposit() public payable {
+    }
+
+    function withdrawAll() public onlyOwner{
+        uint256 balance = address(this).balance;
+        payable(owner).transfer(address(this).balance);
+        emit Withdrawal(owner,balance);
+    }
+
+    function getBalance() public view returns (uint256) {
+        return (address(this).balance);
+    }
+}
